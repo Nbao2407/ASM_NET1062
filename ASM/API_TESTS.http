@@ -1,0 +1,327 @@
+### Test Registration Endpoint
+POST http://localhost:5200/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "TestPassword123!",
+  "fullName": "Test User",
+  "phoneNumber": "1234567890",
+  "address": "123 Test Street",
+  "dateOfBirth": "1990-01-01"
+}
+
+### Test Login Endpoint
+POST http://localhost:5200/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "TestPassword123!"
+}
+
+### Test Get Profile (requires token from login/register)
+GET http://localhost:5200/api/customers/profile
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### Test Update Profile (requires token)
+PUT http://localhost:5200/api/customers/profile
+Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
+
+{
+  "email": "testuser@example.com",
+  "fullName": "Test User Updated",
+  "phoneNumber": "0987654321",
+  "address": "456 New Street",
+  "dateOfBirth": "1990-01-01"
+}
+
+### Test Change Password (requires token)
+PUT http://localhost:5200/api/customers/password
+Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
+
+{
+  "currentPassword": "TestPassword123!",
+  "newPassword": "NewPassword123!"
+}
+
+### Test Google OAuth (requires valid Google ID token)
+POST http://localhost:5200/api/auth/google
+Content-Type: application/json
+
+{
+  "idToken": "YOUR_GOOGLE_ID_TOKEN_HERE"
+}
+
+### Test Get All Food Items
+GET http://localhost:5200/api/items
+
+### Test Get Food Items by Category
+GET http://localhost:5200/api/items?category=Burgers
+
+### Test Get Food Item by ID
+GET http://localhost:5200/api/items/1
+
+### Test Create Food Item (Admin only - requires admin token)
+POST http://localhost:5200/api/items
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "name": "Classic Burger",
+  "description": "Juicy beef patty with lettuce, tomato, and special sauce",
+  "price": 8.99,
+  "category": "Burgers",
+  "theme": "Classic",
+  "imageUrl": "https://example.com/images/classic-burger.jpg",
+  "ingredients": "Beef patty, lettuce, tomato, onion, pickles, special sauce, sesame bun",
+  "nutritionalInfo": "Calories: 550, Protein: 28g, Carbs: 45g, Fat: 25g",
+  "allergenWarnings": "Contains gluten, dairy"
+}
+
+### Test Update Food Item (Admin only - requires admin token)
+PUT http://localhost:5200/api/items/1
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "name": "Classic Burger Updated",
+  "description": "Updated description",
+  "price": 9.99,
+  "category": "Burgers",
+  "theme": "Classic",
+  "imageUrl": "https://example.com/images/classic-burger.jpg",
+  "ingredients": "Beef patty, lettuce, tomato, onion, pickles, special sauce, sesame bun",
+  "nutritionalInfo": "Calories: 550, Protein: 28g, Carbs: 45g, Fat: 25g",
+  "allergenWarnings": "Contains gluten, dairy",
+  "isActive": true
+}
+
+### Test Delete Food Item (Admin only - requires admin token)
+DELETE http://localhost:5200/api/items/1
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+### Test Basic Search by Name
+GET http://localhost:5200/api/items/search?name=burger
+
+### Test Advanced Search with Multiple Criteria
+GET http://localhost:5200/api/items/search?name=burger&minPrice=5&maxPrice=15&category=Burgers
+
+### Test Search by Price Range
+GET http://localhost:5200/api/items/search?minPrice=5&maxPrice=10
+
+### Test Search by Category
+GET http://localhost:5200/api/items/search?category=Pizza
+
+### Test Search by Theme
+GET http://localhost:5200/api/items/search?theme=Spicy
+
+### Test Get All Categories
+GET http://localhost:5200/api/items/categories
+
+### Test Get All Combos
+GET http://localhost:5200/api/combos
+
+### Test Get Combo by ID
+GET http://localhost:5200/api/combos/1
+
+### Test Create Combo (Admin only - requires admin token)
+POST http://localhost:5200/api/combos
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "name": "Family Meal Deal",
+  "description": "Perfect combo for the whole family",
+  "price": 24.99,
+  "imageUrl": "https://example.com/images/family-meal.jpg",
+  "comboItems": [
+    {
+      "foodItemId": 1,
+      "quantity": 2
+    },
+    {
+      "foodItemId": 2,
+      "quantity": 1
+    },
+    {
+      "foodItemId": 5,
+      "quantity": 4
+    }
+  ]
+}
+
+### Test Update Combo (Admin only - requires admin token)
+PUT http://localhost:5200/api/combos/1
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "name": "Family Meal Deal Updated",
+  "description": "Updated description for family combo",
+  "price": 26.99,
+  "imageUrl": "https://example.com/images/family-meal-updated.jpg",
+  "isActive": true,
+  "comboItems": [
+    {
+      "foodItemId": 1,
+      "quantity": 3
+    },
+    {
+      "foodItemId": 2,
+      "quantity": 2
+    },
+    {
+      "foodItemId": 5,
+      "quantity": 4
+    }
+  ]
+}
+
+### Test Delete Combo (Admin only - requires admin token)
+DELETE http://localhost:5200/api/combos/1
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+### Test Create Order (Customer - requires customer token)
+POST http://localhost:5200/api/orders
+Content-Type: application/json
+Authorization: Bearer YOUR_CUSTOMER_TOKEN_HERE
+
+{
+  "items": [
+    {
+      "foodItemId": 1,
+      "quantity": 2
+    },
+    {
+      "comboId": 1,
+      "quantity": 1
+    }
+  ],
+  "deliveryAddress": "123 Main Street, Apt 4B, City, State 12345",
+  "paymentMethod": "Credit Card"
+}
+
+### Test Get All Orders (Customer sees their orders, Admin sees all)
+GET http://localhost:5200/api/orders
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### Test Get Orders by Status
+GET http://localhost:5200/api/orders?status=NotDelivered
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### Test Get Order by ID
+GET http://localhost:5200/api/orders/1
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### Test Update Order Status (Admin only - requires admin token)
+PUT http://localhost:5200/api/orders/1/status
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "status": "BeingDelivered"
+}
+
+### Test Update Order Status to Delivered (Admin only)
+PUT http://localhost:5200/api/orders/1/status
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "status": "Delivered"
+}
+
+### Test Get All Invoices (Customer - requires customer token)
+GET http://localhost:5200/api/orders/invoices
+Authorization: Bearer YOUR_CUSTOMER_TOKEN_HERE
+
+### Test Get Invoices with Date Range Filter
+GET http://localhost:5200/api/orders/invoices?startDate=2024-01-01&endDate=2024-12-31
+Authorization: Bearer YOUR_CUSTOMER_TOKEN_HERE
+
+### Test Get Invoice by ID
+GET http://localhost:5200/api/orders/invoices/1
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### ========================================
+### ADMIN USER MANAGEMENT ENDPOINTS
+### ========================================
+
+### Test Get All Users (Admin only - requires admin token)
+GET http://localhost:5200/api/admin/users
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+### Test Get User by ID (Admin only - requires admin token)
+GET http://localhost:5200/api/admin/users/1
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+### Test Create User (Admin only - requires admin token)
+POST http://localhost:5200/api/admin/users
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "email": "newuser@example.com",
+  "password": "SecurePassword123!",
+  "fullName": "New User",
+  "phoneNumber": "5551234567",
+  "address": "789 Admin Street",
+  "dateOfBirth": "1995-05-15",
+  "role": "Customer"
+}
+
+### Test Create Admin User (Admin only - requires admin token)
+POST http://localhost:5200/api/admin/users
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "email": "newadmin@example.com",
+  "password": "AdminPassword123!",
+  "fullName": "New Admin",
+  "phoneNumber": "5559876543",
+  "address": "456 Admin Avenue",
+  "dateOfBirth": "1988-08-20",
+  "role": "Admin"
+}
+
+### Test Update User (Admin only - requires admin token)
+PUT http://localhost:5200/api/admin/users/2
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "email": "updateduser@example.com",
+  "fullName": "Updated User Name",
+  "phoneNumber": "5551112222",
+  "address": "999 Updated Street",
+  "dateOfBirth": "1995-05-15",
+  "role": "Customer",
+  "isActive": true
+}
+
+### Test Deactivate User (Admin only - requires admin token)
+PUT http://localhost:5200/api/admin/users/2
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "email": "updateduser@example.com",
+  "fullName": "Updated User Name",
+  "phoneNumber": "5551112222",
+  "address": "999 Updated Street",
+  "dateOfBirth": "1995-05-15",
+  "role": "Customer",
+  "isActive": false
+}
+
+### Test Delete User (Admin only - requires admin token)
+DELETE http://localhost:5200/api/admin/users/2
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+### Test Delete Self (Should fail - Admin only)
+DELETE http://localhost:5200/api/admin/users/1
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
