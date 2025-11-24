@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { foodItemService } from '@/services/foodItemService';
+import { foodItemService, type FoodItem } from '@/services/foodItemService';
 import { comboService, type Combo } from '@/services/comboService';
+import { useCartStore } from '@/stores/cart';
 import FoodItemCard from '@/components/FoodItemCard.vue';
 import ComboCard from '@/components/ComboCard.vue';
 
 const router = useRouter();
-const featuredItems = ref<any[]>([]);
+const cartStore = useCartStore();
+const featuredItems = ref<FoodItem[]>([]);
 const featuredCombos = ref<Combo[]>([]);
 const loading = ref(true);
 
@@ -26,6 +28,28 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+function addFoodItemToCart(item: FoodItem) {
+  cartStore.addItem({
+    id: item.foodItemId,
+    name: item.name,
+    price: item.price,
+    quantity: 1,
+    type: 'food',
+    imageUrl: item.imageUrl,
+  });
+}
+
+function addComboToCart(combo: Combo) {
+  cartStore.addItem({
+    id: combo.comboId,
+    name: combo.name,
+    price: combo.price,
+    quantity: 1,
+    type: 'combo',
+    imageUrl: combo.imageUrl,
+  });
+}
 
 function navigateToMenu() {
   router.push('/menu');
@@ -146,7 +170,12 @@ function navigateToSearch() {
         </div>
 
         <div v-else class="items-grid">
-          <FoodItemCard v-for="item in featuredItems" :key="item.foodItemId" :item="item" />
+          <FoodItemCard
+            v-for="item in featuredItems"
+            :key="item.foodItemId"
+            :item="item"
+            @add-to-cart="addFoodItemToCart"
+          />
         </div>
       </div>
     </section>
@@ -175,7 +204,12 @@ function navigateToSearch() {
         </div>
 
         <div v-else class="combos-grid">
-          <ComboCard v-for="combo in featuredCombos" :key="combo.comboId" :combo="combo" />
+          <ComboCard
+            v-for="combo in featuredCombos"
+            :key="combo.comboId"
+            :combo="combo"
+            @add-to-cart="addComboToCart"
+          />
         </div>
       </div>
     </section>
