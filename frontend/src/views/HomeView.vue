@@ -2,13 +2,13 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { foodItemService } from '@/services/foodItemService';
-import { comboService } from '@/services/comboService';
+import { comboService, type Combo } from '@/services/comboService';
 import FoodItemCard from '@/components/FoodItemCard.vue';
 import ComboCard from '@/components/ComboCard.vue';
 
 const router = useRouter();
 const featuredItems = ref<any[]>([]);
-const featuredCombos = ref<unknown[]>([]);
+const featuredCombos = ref<Combo[]>([]);
 const loading = ref(true);
 
 onMounted(async () => {

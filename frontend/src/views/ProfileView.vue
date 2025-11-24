@@ -15,7 +15,7 @@
         <!-- Loading State -->
         <div v-if="loadingProfile" class="px-4 py-5 sm:p-6">
           <div class="flex justify-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
         </div>
 
@@ -32,7 +32,7 @@
                   id="fullName"
                   v-model="profileData.fullName"
                   type="text"
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   :class="{ 'border-red-500': profileErrors.fullName }"
                 />
                 <p v-if="profileErrors.fullName" class="mt-1 text-sm text-red-600">
@@ -49,7 +49,7 @@
                   id="email"
                   v-model="profileData.email"
                   type="email"
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   :class="{ 'border-red-500': profileErrors.email }"
                 />
                 <p v-if="profileErrors.email" class="mt-1 text-sm text-red-600">
@@ -66,7 +66,7 @@
                   id="phoneNumber"
                   v-model="profileData.phoneNumber"
                   type="tel"
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   :class="{ 'border-red-500': profileErrors.phoneNumber }"
                 />
                 <p v-if="profileErrors.phoneNumber" class="mt-1 text-sm text-red-600">
@@ -83,7 +83,7 @@
                   id="dateOfBirth"
                   v-model="profileData.dateOfBirth"
                   type="date"
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   :class="{ 'border-red-500': profileErrors.dateOfBirth }"
                 />
                 <p v-if="profileErrors.dateOfBirth" class="mt-1 text-sm text-red-600">
@@ -100,7 +100,7 @@
                   id="address"
                   v-model="profileData.address"
                   rows="3"
-                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   :class="{ 'border-red-500': profileErrors.address }"
                 />
                 <p v-if="profileErrors.address" class="mt-1 text-sm text-red-600">
@@ -131,7 +131,7 @@
               <button
                 type="submit"
                 :disabled="updatingProfile"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span v-if="updatingProfile">Updating...</span>
                 <span v-else>Update Profile</span>
@@ -163,7 +163,7 @@
                 id="currentPassword"
                 v-model="passwordData.currentPassword"
                 type="password"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': passwordErrors.currentPassword }"
               />
               <p v-if="passwordErrors.currentPassword" class="mt-1 text-sm text-red-600">
@@ -180,7 +180,7 @@
                 id="newPassword"
                 v-model="passwordData.newPassword"
                 type="password"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': passwordErrors.newPassword }"
               />
               <p v-if="passwordErrors.newPassword" class="mt-1 text-sm text-red-600">
@@ -197,7 +197,7 @@
                 id="confirmPassword"
                 v-model="passwordData.confirmPassword"
                 type="password"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 :class="{ 'border-red-500': passwordErrors.confirmPassword }"
               />
               <p v-if="passwordErrors.confirmPassword" class="mt-1 text-sm text-red-600">
@@ -227,7 +227,7 @@
               <button
                 type="submit"
                 :disabled="changingPassword"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span v-if="changingPassword">Changing...</span>
                 <span v-else>Change Password</span>
