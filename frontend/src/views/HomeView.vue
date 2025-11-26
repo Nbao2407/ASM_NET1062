@@ -61,115 +61,101 @@ function navigateToSearch() {
 </script>
 
 <template>
-  <div class="home-view">
+  <div class="min-h-screen bg-gray-50">
     <!-- Hero Section -->
-    <section class="hero">
-      <div class="container">
-        <div class="hero-content">
-          <h1 class="hero-title">Delicious Food, Delivered Fast</h1>
-          <p class="hero-subtitle">
-            Order your favorite meals from our extensive menu and get them delivered right to your
-            door
-          </p>
-          <div class="hero-actions">
-            <button @click="navigateToMenu" class="btn-primary-large">
-              Browse Menu
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
-            </button>
-            <button @click="navigateToSearch" class="btn-secondary-large">Search Items</button>
+    <section class="relative bg-gradient-to-br from-primary to-primary-hover text-white overflow-hidden">
+      <div class="absolute inset-0 bg-[url('/pattern.png')] opacity-10"></div>
+      <div class="container mx-auto px-base py-5xl md:py-4xl relative z-10">
+        <div class="grid md:grid-cols-2 gap-4xl items-center">
+          <div class="space-y-lg text-center md:text-left">
+            <h1 class="font-heading font-extrabold text-5xl md:text-6xl leading-tight">
+              Đồ ăn ngon, <br/>
+              <span class="text-secondary">Giao nhanh</span>
+            </h1>
+            <p class="text-lg md:text-xl text-white/90 max-w-lg mx-auto md:mx-0 font-light leading-relaxed">
+              Đặt các món ăn yêu thích của bạn từ thực đơn rộng của chúng tôi và nhận chúng được giao tận cửa trong vài phút.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-md justify-center md:justify-start pt-lg">
+              <button @click="navigateToMenu" class="px-xl py-base bg-white text-primary font-bold text-lg rounded-full shadow-md hover:shadow-lg hover:bg-gray-100 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-md h-11">
+                Xem thực đơn
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </button>
+              <button @click="navigateToSearch" class="px-xl py-base bg-transparent border-2 border-white text-white font-bold text-lg rounded-full hover:bg-white/10 transition-all flex items-center justify-center h-11">
+                Tìm kiếm
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="hero-image">
-          <div class="hero-image-placeholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path
-                d="M3 3h18v18H3z M9 9h6v6H9z M12 3v6 M12 15v6 M3 12h6 M15 12h6"
-                stroke-linecap="round"
-              />
-            </svg>
+          <div class="hidden md:block relative">
+            <div class="absolute inset-0 bg-secondary/20 blur-3xl rounded-full transform scale-110"></div>
+            <div class="relative bg-white/10 backdrop-blur-sm p-lg rounded-xl border border-white/20 shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-500">
+              <div class="aspect-square bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
+                <img src="/hero_food_image.png" alt="Delicious Food" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Features Section -->
-    <section class="features">
-      <div class="container">
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
+    <section class="py-5xl bg-white">
+      <div class="container mx-auto px-base">
+        <div class="grid md:grid-cols-3 gap-xl">
+          <div class="p-lg rounded-lg bg-gray-50 hover:bg-white hover:shadow-md transition-all duration-300 border border-transparent hover:border-gray-100 group">
+            <div class="w-16 h-16 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-lg group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3>Fast Delivery</h3>
-            <p>Get your food delivered in 30 minutes or less</p>
+            <h3 class="font-heading text-xl font-bold text-gray-900 mb-md">Giao nhanh</h3>
+            <p class="text-gray-600 leading-relaxed text-sm">Nhận thức ăn của bạn trong vòng 30 phút hoặc ít hơn, nóng và tươi tại cửa nhà.</p>
           </div>
-          <div class="feature-card">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+          <div class="p-lg rounded-lg bg-gray-50 hover:bg-white hover:shadow-md transition-all duration-300 border border-transparent hover:border-gray-100 group">
+            <div class="w-16 h-16 bg-secondary/10 text-secondary rounded-lg flex items-center justify-center mb-lg group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3>Quality Food</h3>
-            <p>Fresh ingredients and delicious recipes</p>
+            <h3 class="font-heading text-xl font-bold text-gray-900 mb-md">Thức ăn chất lượng</h3>
+            <p class="text-gray-600 leading-relaxed text-sm">Chúng tôi chỉ sử dụng các nguyên liệu tươi nhất và công thức xác thực để có hương vị tốt nhất.</p>
           </div>
-          <div class="feature-card">
-            <div class="feature-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+          <div class="p-lg rounded-lg bg-gray-50 hover:bg-white hover:shadow-md transition-all duration-300 border border-transparent hover:border-gray-100 group">
+            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-lg group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3>Great Prices</h3>
-            <p>Affordable meals and combo deals</p>
+            <h3 class="font-heading text-xl font-bold text-gray-900 mb-md">Giá tốt</h3>
+            <p class="text-gray-600 leading-relaxed text-sm">Thưởng thức những bữa ăn ngon với giá cả hợp lý nhờ các combo deal tuyệt vời của chúng tôi.</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Featured Items Section -->
-    <section class="featured-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Featured Items</h2>
-          <router-link to="/menu" class="view-all-link">
-            View All
-            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
+    <section class="py-5xl bg-gray-50">
+      <div class="container mx-auto px-base">
+        <div class="flex justify-between items-end mb-xxl">
+          <div>
+            <h2 class="font-heading text-4xl md:text-5xl font-bold text-gray-900 mb-md">Món ăn nổi bật</h2>
+            <p class="text-gray-600 text-lg">Các món ăn phổ biến nhất được chọn cho bạn</p>
+          </div>
+          <router-link to="/menu" class="text-primary font-bold hover:text-primary-hover flex items-center gap-md group hidden sm:flex">
+            Xem tất cả
+            <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </router-link>
         </div>
 
-        <div v-if="loading" class="loading-state">
-          <div class="spinner"></div>
-          <p>Loading featured items...</p>
+        <div v-if="loading" class="flex flex-col items-center justify-center py-5xl">
+          <div class="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin mb-md"></div>
+          <p class="text-gray-500 font-medium">Đang tải món ăn...</p>
         </div>
 
-        <div v-else class="items-grid">
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-xl">
           <FoodItemCard
             v-for="item in featuredItems"
             :key="item.foodItemId"
@@ -181,29 +167,27 @@ function navigateToSearch() {
     </section>
 
     <!-- Featured Combos Section -->
-    <section class="featured-section combos-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Special Combos</h2>
-          <router-link to="/menu" class="view-all-link">
-            View All
-            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
+    <section class="py-5xl bg-white">
+      <div class="container mx-auto px-base">
+        <div class="flex justify-between items-end mb-xxl">
+          <div>
+            <h2 class="font-heading text-4xl md:text-5xl font-bold text-gray-900 mb-md">Combo Đặc Biệt</h2>
+            <p class="text-gray-600 text-lg">Những bữa ăn giá trị nhất dành cho bạn</p>
+          </div>
+          <router-link to="/menu" class="text-primary font-bold hover:text-primary-hover flex items-center gap-md group hidden sm:flex">
+            Xem tất cả
+            <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </router-link>
         </div>
 
-        <div v-if="loading" class="loading-state">
-          <div class="spinner"></div>
-          <p>Loading combos...</p>
+        <div v-if="loading" class="flex flex-col items-center justify-center py-5xl">
+          <div class="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin mb-md"></div>
+          <p class="text-gray-500 font-medium">Đang tải combo...</p>
         </div>
 
-        <div v-else class="combos-grid">
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-xl">
           <ComboCard
             v-for="combo in featuredCombos"
             :key="combo.comboId"
@@ -215,271 +199,19 @@ function navigateToSearch() {
     </section>
 
     <!-- CTA Section -->
-    <section class="cta-section">
-      <div class="container">
-        <div class="cta-content">
-          <h2>Ready to Order?</h2>
-          <p>Browse our full menu and find your favorite dishes</p>
-          <button @click="navigateToMenu" class="btn-primary-large">Order Now</button>
-        </div>
+    <section class="py-5xl bg-dark relative overflow-hidden">
+      <div class="absolute inset-0 bg-primary/10"></div>
+      <div class="container mx-auto px-base relative z-10 text-center">
+        <h2 class="font-heading text-4xl md:text-5xl font-bold text-white mb-lg">Sẵn sàng đặt món?</h2>
+        <p class="text-lg text-gray-300 mb-xxl max-w-2xl mx-auto leading-relaxed">Duyệt qua thực đơn đầy đủ của chúng tôi và tìm các món ăn yêu thích của bạn. Giao hàng nhanh và đảm bảo thức ăn nóng hổi.</p>
+        <button @click="navigateToMenu" class="px-xl py-base bg-primary text-white font-bold text-lg rounded-full shadow-md hover:bg-primary-hover hover:shadow-lg transition-all transform hover:-translate-y-1 h-11">
+          Đặt món ngay
+        </button>
       </div>
     </section>
   </div>
 </template>
 
 <style scoped>
-.home-view {
-  background: #f9fafb;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-/* Hero Section */
-.hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 4rem 0;
-}
-
-.hero-content {
-  max-width: 600px;
-}
-
-.hero-title {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-}
-
-.hero-subtitle {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  opacity: 0.95;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.btn-primary-large,
-.btn-secondary-large {
-  padding: 1rem 2rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 1.125rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-primary-large {
-  background: white;
-  color: #667eea;
-}
-
-.btn-primary-large:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.btn-secondary-large {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px solid white;
-}
-
-.btn-secondary-large:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.icon {
-  width: 20px;
-  height: 20px;
-}
-
-.hero-image {
-  display: none;
-}
-
-.hero-image-placeholder {
-  width: 100%;
-  height: 400px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-image-placeholder svg {
-  width: 200px;
-  height: 200px;
-  opacity: 0.3;
-}
-
-@media (min-width: 768px) {
-  .hero .container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-  }
-
-  .hero-image {
-    display: block;
-  }
-}
-
-/* Features Section */
-.features {
-  padding: 4rem 0;
-  background: white;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-}
-
-.feature-card {
-  text-align: center;
-  padding: 2rem;
-}
-
-.feature-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-.feature-icon svg {
-  width: 32px;
-  height: 32px;
-}
-
-.feature-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: #1f2937;
-}
-
-.feature-card p {
-  color: #6b7280;
-}
-
-/* Featured Sections */
-.featured-section {
-  padding: 4rem 0;
-}
-
-.combos-section {
-  background: white;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.section-header h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-}
-
-.view-all-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #667eea;
-  text-decoration: none;
-  font-weight: 600;
-  transition: gap 0.2s;
-}
-
-.view-all-link:hover {
-  gap: 0.75rem;
-}
-
-.icon-small {
-  width: 16px;
-  height: 16px;
-}
-
-.items-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
-.combos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-}
-
-.loading-state {
-  text-align: center;
-  padding: 4rem 0;
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid #e5e7eb;
-  border-top-color: #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* CTA Section */
-.cta-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 4rem 0;
-}
-
-.cta-content {
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.cta-content h2 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-}
-
-.cta-content p {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  opacity: 0.95;
-}
+/* No custom CSS needed, all handled by Tailwind */
 </style>

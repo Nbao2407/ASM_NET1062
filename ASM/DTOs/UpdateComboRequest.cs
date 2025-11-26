@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ASM.Validation;
 
 namespace ASM.DTOs;
 
@@ -6,9 +7,11 @@ public class UpdateComboRequest
 {
     [Required(ErrorMessage = "Name is required")]
     [MaxLength(255)]
+    [NoHtml]
     public string Name { get; set; } = string.Empty;
 
     [MaxLength(1000)]
+    [NoHtml]
     public string? Description { get; set; }
 
     [Required(ErrorMessage = "Price is required")]

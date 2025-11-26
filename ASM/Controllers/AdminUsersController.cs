@@ -17,15 +17,18 @@ public class AdminUsersController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly IPasswordHashService _passwordHashService;
+    private readonly ISanitizationService _sanitizationService;
     private readonly ILogger<AdminUsersController> _logger;
 
     public AdminUsersController(
         ApplicationDbContext context,
         IPasswordHashService passwordHashService,
+        ISanitizationService sanitizationService,
         ILogger<AdminUsersController> logger)
     {
         _context = context;
         _passwordHashService = passwordHashService;
+        _sanitizationService = sanitizationService;
         _logger = logger;
     }
 
@@ -95,6 +98,10 @@ public class AdminUsersController : ControllerBase
             return BadRequest(ModelState);
         }
 
+        // Sanitize inputs
+        request.FullName = _sanitizationService.Sanitize(request.FullName);
+        request.Address = _sanitizationService.Sanitize(request.Address);
+
         // Check for duplicate email
         var existingUser = await _context.Users
             .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
@@ -163,6 +170,10 @@ public class AdminUsersController : ControllerBase
         {
             return NotFound(new { message = "User not found" });
         }
+
+        // Sanitize inputs
+        request.FullName = _sanitizationService.Sanitize(request.FullName);
+        request.Address = _sanitizationService.Sanitize(request.Address);
 
         // Check if email is being changed and if new email already exists
         if (user.Email.ToLower() != request.Email.ToLower())

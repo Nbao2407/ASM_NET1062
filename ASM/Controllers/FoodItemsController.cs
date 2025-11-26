@@ -5,6 +5,8 @@ using ASM.Data;
 using ASM.DTOs;
 using ASM.Models;
 
+using ASM.Services;
+
 namespace ASM.Controllers;
 
 [ApiController]
@@ -12,13 +14,16 @@ namespace ASM.Controllers;
 public class FoodItemsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly ISanitizationService _sanitizationService;
     private readonly ILogger<FoodItemsController> _logger;
 
     public FoodItemsController(
         ApplicationDbContext context,
+        ISanitizationService sanitizationService,
         ILogger<FoodItemsController> logger)
     {
         _context = context;
+        _sanitizationService = sanitizationService;
         _logger = logger;
     }
 
@@ -105,6 +110,15 @@ public class FoodItemsController : ControllerBase
             return BadRequest(ModelState);
         }
 
+        // Sanitize inputs
+        request.Name = _sanitizationService.Sanitize(request.Name);
+        request.Description = _sanitizationService.Sanitize(request.Description);
+        request.Category = _sanitizationService.Sanitize(request.Category);
+        request.Theme = _sanitizationService.Sanitize(request.Theme);
+        request.Ingredients = _sanitizationService.Sanitize(request.Ingredients);
+        request.NutritionalInfo = _sanitizationService.Sanitize(request.NutritionalInfo);
+        request.AllergenWarnings = _sanitizationService.Sanitize(request.AllergenWarnings);
+
         var foodItem = new FoodItem
         {
             Name = request.Name,
@@ -164,6 +178,15 @@ public class FoodItemsController : ControllerBase
         {
             return NotFound(new { message = "Food item not found" });
         }
+
+        // Sanitize inputs
+        request.Name = _sanitizationService.Sanitize(request.Name);
+        request.Description = _sanitizationService.Sanitize(request.Description);
+        request.Category = _sanitizationService.Sanitize(request.Category);
+        request.Theme = _sanitizationService.Sanitize(request.Theme);
+        request.Ingredients = _sanitizationService.Sanitize(request.Ingredients);
+        request.NutritionalInfo = _sanitizationService.Sanitize(request.NutritionalInfo);
+        request.AllergenWarnings = _sanitizationService.Sanitize(request.AllergenWarnings);
 
         foodItem.Name = request.Name;
         foodItem.Description = request.Description;

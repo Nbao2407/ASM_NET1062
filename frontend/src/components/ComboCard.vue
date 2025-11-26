@@ -1,169 +1,121 @@
 <template>
-  <div class="combo-card">
-    <div class="card-badge">COMBO</div>
-    <div class="card-image">
-      <img
-        :src="combo.imageUrl || '/placeholder-combo.jpg'"
+  <div @click="navigateToDetail" class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col h-full cursor-pointer">
+    <!-- Combo Image -->
+    <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
+      <img 
+        :src="imageUrl" 
         :alt="combo.name"
         @error="handleImageError"
+        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
       />
-    </div>
-    <div class="card-content">
-      <h3 class="combo-name">{{ combo.name }}</h3>
-      <p class="combo-description">{{ truncatedDescription }}</p>
-      <div class="combo-items">
-        <span class="items-label">Includes:</span>
-        <span class="items-count">{{ combo.items.length }} items</span>
+      
+      <!-- Combo badge -->
+      <div class="absolute top-3 left-3">
+        <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+          Combo
+        </span>
       </div>
-      <div class="card-footer">
-        <span class="combo-price">${{ combo.price.toFixed(2) }}</span>
-        <button @click="handleAddToCart" class="btn-add-cart">
-          Add to Cart
+      
+      <!-- Action buttons -->
+      <div class="absolute bottom-3 right-3 flex gap-2">
+        <button 
+          @click.stop="addToCart"
+          class="bg-red-500 text-white p-2.5 rounded-full hover:bg-red-600 transition-colors shadow-lg"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
         </button>
+        <button 
+          @click.stop="navigateToDetail"
+          class="bg-gray-800 text-white p-2.5 rounded-full hover:bg-gray-900 transition-colors shadow-lg"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Combo Info -->
+    <div class="p-3 flex-1 flex flex-col">
+      <!-- Title -->
+      <h3 class="font-semibold text-gray-900 text-sm mb-1.5 line-clamp-1">
+        {{ combo.name }}
+      </h3>
+      
+      <!-- Description -->
+      <p class="text-xs text-gray-600 mb-2 line-clamp-2">
+        {{ combo.description || 'Combo đặc biệt với giá ưu đãi.' }}
+      </p>
+      
+      <!-- Price -->
+      <div class="mt-auto">
+        <span class="text-lg font-bold text-red-500">{{ formatPrice(combo.price) }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed } from 'vue';
-import type { Combo } from '@/services/comboService';
+<script>
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-interface Props {
-  combo: Combo;
+export default {
+  name: 'ComboCard',
+  props: {
+    combo: {
+      type: Object,
+      required: true
+    }
+  },
+  setup(props, context) {
+    const router = useRouter()
+    const isAdding = ref(false)
+    const imageError = ref(false)
+
+    const imageUrl = computed(() => {
+      if (imageError.value) {
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(props.combo.name)}&size=400&background=fef3c7&color=92400e&bold=true`
+      }
+      
+      let url = props.combo.imageUrl;
+      if (url && url.startsWith('photo-')) {
+          return `https://images.unsplash.com/${url}`;
+      }
+      
+      return url || `https://source.unsplash.com/400x300/?food,combo,meal`
+    })
+
+    const handleImageError = () => {
+      imageError.value = true
+    }
+
+    const navigateToDetail = () => {
+      router.push({ name: 'combo-detail', params: { id: props.combo.comboId } })
+    }
+
+    const addToCart = async () => {
+      isAdding.value = true
+      // Emit event to parent
+      context.emit('add-to-cart', props.combo)
+      await new Promise(resolve => setTimeout(resolve, 600))
+      isAdding.value = false
+    }
+
+    const formatPrice = (price) => {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price * 1000)
+    }
+
+    return {
+      isAdding,
+      imageError,
+      imageUrl,
+      handleImageError,
+      addToCart,
+      formatPrice,
+      navigateToDetail
+    }
+  }
 }
-
-const props = defineProps<Props>();
-const emit = defineEmits<{
-  addToCart: [combo: Combo];
-  click: [combo: Combo];
-}>();
-
-const truncatedDescription = computed(() => {
-  if (!props.combo.description) return '';
-  return props.combo.description.length > 100
-    ? props.combo.description.substring(0, 100) + '...'
-    : props.combo.description;
-});
-
-const handleImageError = (event: Event) => {
-  const target = event.target as HTMLImageElement;
-  target.src = '/placeholder-combo.jpg';
-};
-
-const handleAddToCart = () => {
-  emit('addToCart', props.combo);
-};
 </script>
-
-<style scoped>
-.combo-card {
-  border: 2px solid #ff9800;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  background: white;
-  cursor: pointer;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.combo-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-}
-
-.card-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #ff9800;
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  z-index: 1;
-}
-
-.card-image {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-  background: #f5f5f5;
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.card-content {
-  padding: 1rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.combo-name {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: #333;
-}
-
-.combo-description {
-  font-size: 0.875rem;
-  color: #666;
-  margin: 0 0 1rem 0;
-  flex: 1;
-}
-
-.combo-items {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-}
-
-.items-label {
-  color: #666;
-}
-
-.items-count {
-  color: #ff9800;
-  font-weight: 600;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-}
-
-.combo-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #ff9800;
-}
-
-.btn-add-cart {
-  background: #ff9800;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.btn-add-cart:hover {
-  background: #e68900;
-}
-</style>

@@ -1,141 +1,131 @@
 <template>
-  <div class="food-item-card">
-    <div class="card-image">
-      <img
-        :src="item.imageUrl || '/placeholder-food.jpg'"
+  <div @click="navigateToDetail" class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col h-full cursor-pointer">
+    <!-- Product Image -->
+    <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
+      <img 
+        :src="imageUrl" 
         :alt="item.name"
         @error="handleImageError"
+        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
       />
+      
+      <!-- Trending badge -->
+      <div v-if="item.isPopular || item.isTrending" class="absolute top-3 left-3">
+        <span class="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+          🔥 Trending
+        </span>
+      </div>
     </div>
-    <div class="card-content">
-      <h3 class="item-name">{{ item.name }}</h3>
-      <p class="item-category">{{ item.category }}</p>
-      <p class="item-description">{{ truncatedDescription }}</p>
-      <div class="card-footer">
-        <span class="item-price">${{ item.price.toFixed(2) }}</span>
-        <button @click="handleAddToCart" class="btn-add-cart">
-          Add to Cart
+    
+    <!-- Product Info -->
+    <div class="p-4 flex-1 flex flex-col">
+      <!-- Category tag & Rating -->
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-medium text-red-500">{{ item.category || 'Burger & Cơm' }}</span>
+        <div class="flex items-center gap-1">
+          <div class="flex">
+            <svg v-for="star in 5" :key="star" 
+                 :class="star <= Math.floor(item.rating || 4.8) ? 'text-yellow-400 fill-current' : 'text-gray-300'"
+                 class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-gray-700 ml-1">{{ item.rating || 4.8 }}</span>
+        </div>
+      </div>
+      
+      <!-- Title -->
+      <h3 class="font-bold text-gray-900 text-base mb-2 line-clamp-2 min-h-[3rem]">
+        {{ item.name }}
+      </h3>
+      
+      <!-- Description -->
+      <p class="text-sm text-gray-600 mb-3 line-clamp-1">
+        {{ item.description || 'Món ăn ngon, chất lượng cao.' }}
+      </p>
+      
+      <!-- Price & Add button -->
+      <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
+        <div class="flex flex-col">
+          <span v-if="item.originalPrice" class="text-xs text-gray-400 line-through">{{ formatPrice(item.originalPrice) }}</span>
+          <span class="text-xl font-bold text-red-500">{{ formatPrice(item.price) }}</span>
+        </div>
+        <button 
+          @click.stop="addToCart"
+          :class="[
+            'px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200',
+            isAdding 
+              ? 'bg-green-500 text-white' 
+              : 'bg-red-500 text-white hover:bg-red-600 shadow-md hover:shadow-lg'
+          ]"
+        >
+          <span v-if="!isAdding">+ Thêm</span>
+          <span v-else>✓ Đã thêm</span>
         </button>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed } from 'vue';
-import type { FoodItem } from '@/services/foodItemService';
+<script>
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-interface Props {
-  item: FoodItem;
+export default {
+  name: 'FoodItemCard',
+  props: {
+    item: {
+      type: Object,
+      required: true
+    }
+  },
+  setup(props, context) {
+    const router = useRouter()
+    const isAdding = ref(false)
+    const imageError = ref(false)
+
+    const imageUrl = computed(() => {
+      if (imageError.value) {
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(props.item.name)}&size=400&background=f3f4f6&color=6b7280&bold=true`
+      }
+      
+      let url = props.item.imageUrl;
+      if (url && url.startsWith('photo-')) {
+          return `https://images.unsplash.com/${url}`;
+      }
+      
+      return url || `https://source.unsplash.com/400x300/?food,${props.item.category || 'burger'}`
+    })
+
+    const handleImageError = () => {
+      imageError.value = true
+    }
+
+    const navigateToDetail = () => {
+      router.push({ name: 'food-detail', params: { id: props.item.foodItemId } })
+    }
+
+    const addToCart = async () => {
+      isAdding.value = true
+      // Emit event to parent
+      context.emit('add-to-cart', props.item)
+      await new Promise(resolve => setTimeout(resolve, 600))
+      isAdding.value = false
+    }
+
+    const formatPrice = (price) => {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price * 1000)
+    }
+
+    return {
+      isAdding,
+      imageError,
+      imageUrl,
+      handleImageError,
+      addToCart,
+      formatPrice,
+      navigateToDetail
+    }
+  }
 }
-
-const props = defineProps<Props>();
-const emit = defineEmits<{
-  addToCart: [item: FoodItem];
-  click: [item: FoodItem];
-}>();
-
-const truncatedDescription = computed(() => {
-  if (!props.item.description) return '';
-  return props.item.description.length > 100
-    ? props.item.description.substring(0, 100) + '...'
-    : props.item.description;
-});
-
-const handleImageError = (event: Event) => {
-  const target = event.target as HTMLImageElement;
-  target.src = '/placeholder-food.jpg';
-};
-
-const handleAddToCart = () => {
-  emit('addToCart', props.item);
-};
 </script>
-
-<style scoped>
-.food-item-card {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  background: white;
-  cursor: pointer;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.food-item-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.card-image {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-  background: #f5f5f5;
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.card-content {
-  padding: 1rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.item-name {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: #333;
-}
-
-.item-category {
-  font-size: 0.875rem;
-  color: #666;
-  text-transform: uppercase;
-  margin: 0 0 0.5rem 0;
-}
-
-.item-description {
-  font-size: 0.875rem;
-  color: #666;
-  margin: 0 0 1rem 0;
-  flex: 1;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-}
-
-.item-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #2c3e50;
-}
-
-.btn-add-cart {
-  background: #42b983;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.btn-add-cart:hover {
-  background: #359268;
-}
-</style>

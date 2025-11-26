@@ -23,6 +23,9 @@ builder.Services.AddScoped<IPasswordHashService, PasswordHashService>();
 // Register Google Auth Service
 builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 
+// Register Sanitization Service
+builder.Services.AddScoped<ISanitizationService, SanitizationService>();
+
 // Configure JWT Authentication
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is not configured");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "FastFoodOrderingSystem";
@@ -95,6 +98,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
+        await context.Database.MigrateAsync();
         await DbSeeder.SeedAsync(context);
     }
     catch (Exception ex)

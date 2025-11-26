@@ -5,6 +5,8 @@ using ASM.Data;
 using ASM.DTOs;
 using ASM.Models;
 
+using ASM.Services;
+
 namespace ASM.Controllers;
 
 [ApiController]
@@ -12,13 +14,16 @@ namespace ASM.Controllers;
 public class CombosController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly ISanitizationService _sanitizationService;
     private readonly ILogger<CombosController> _logger;
 
     public CombosController(
         ApplicationDbContext context,
+        ISanitizationService sanitizationService,
         ILogger<CombosController> logger)
     {
         _context = context;
+        _sanitizationService = sanitizationService;
         _logger = logger;
     }
 
@@ -106,6 +111,10 @@ public class CombosController : ControllerBase
         {
             return BadRequest(ModelState);
         }
+
+        // Sanitize inputs
+        request.Name = _sanitizationService.Sanitize(request.Name);
+        request.Description = _sanitizationService.Sanitize(request.Description);
 
         // Validate that all food items exist and are active
         var foodItemIds = request.ComboItems.Select(ci => ci.FoodItemId).Distinct().ToList();
@@ -215,6 +224,10 @@ public class CombosController : ControllerBase
         {
             return NotFound(new { message = "Combo not found" });
         }
+
+        // Sanitize inputs
+        request.Name = _sanitizationService.Sanitize(request.Name);
+        request.Description = _sanitizationService.Sanitize(request.Description);
 
         // Validate that all food items exist and are active
         var foodItemIds = request.ComboItems.Select(ci => ci.FoodItemId).Distinct().ToList();

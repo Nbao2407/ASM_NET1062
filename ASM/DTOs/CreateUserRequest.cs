@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ASM.Validation;
 
 namespace ASM.DTOs;
 
@@ -15,6 +16,7 @@ public class CreateUserRequest
 
     [Required(ErrorMessage = "Full name is required")]
     [MaxLength(255)]
+    [NoHtml]
     public string FullName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Phone number is required")]
@@ -23,6 +25,7 @@ public class CreateUserRequest
     public string PhoneNumber { get; set; } = string.Empty;
 
     [MaxLength(500)]
+    [NoHtml]
     public string? Address { get; set; }
 
     public DateTime? DateOfBirth { get; set; }

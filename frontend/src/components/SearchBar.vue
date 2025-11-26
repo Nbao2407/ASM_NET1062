@@ -1,355 +1,159 @@
 <template>
   <div class="search-bar">
-    <div class="search-container">
-      <!-- Basic Search -->
-      <div class="basic-search">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search for food items..."
-          @input="handleBasicSearch"
-          class="search-input"
-        />
-        <button @click="handleSearch" class="btn-search">
-          🔍 Search
-        </button>
-        <button @click="toggleAdvanced" class="btn-toggle">
-          {{ showAdvanced ? 'Simple' : 'Advanced' }}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+      <!-- Main Search Row -->
+      <div class="flex gap-3 items-center">
+        <!-- Search Input -->
+        <div class="flex-1 relative">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Tìm kiếm món ăn..."
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            @input="handleSearch"
+          />
+        </div>
+
+        <!-- Sort Dropdown -->
+        <select
+          v-model="sortBy"
+          class="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-white min-w-[150px]"
+          @change="handleSearch"
+        >
+          <option value="">Mặc định</option>
+          <option value="name-asc">Tên A-Z</option>
+          <option value="name-desc">Tên Z-A</option>
+          <option value="price-asc">Giá thấp - cao</option>
+          <option value="price-desc">Giá cao - thấp</option>
+        </select>
+
+        <!-- Filter Button -->
+        <button
+          @click="toggleAdvanced"
+          :class="[
+            'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap',
+            showAdvanced 
+              ? 'bg-red-600 text-white' 
+              : 'bg-red-500 text-white hover:bg-red-600'
+          ]"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          Bộ lọc
         </button>
       </div>
 
-      <!-- Advanced Search -->
-      <transition name="slide">
-        <div v-if="showAdvanced" class="advanced-search">
-          <div class="search-grid">
-            <div class="search-field">
-              <label>Category</label>
-              <select v-model="advancedFilters.category">
-                <option value="">All Categories</option>
-                <option v-for="cat in categories" :key="cat" :value="cat">
-                  {{ cat }}
-                </option>
-              </select>
-            </div>
-
-            <div class="search-field">
-              <label>Min Price</label>
-              <input
-                v-model.number="advancedFilters.minPrice"
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="$0.00"
-              />
-            </div>
-
-            <div class="search-field">
-              <label>Max Price</label>
-              <input
-                v-model.number="advancedFilters.maxPrice"
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="$999.99"
-              />
-            </div>
-
-            <div class="search-field">
-              <label>Theme</label>
-              <input
-                v-model="advancedFilters.theme"
-                type="text"
-                placeholder="e.g., Spicy, Vegetarian"
-              />
-            </div>
+      <!-- Advanced Filters -->
+      <div v-if="showAdvanced" class="mt-4 pt-4 border-t border-gray-200 animate-slide-down">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Category -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Danh mục</label>
+            <select
+              v-model="filters.category"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              @change="handleSearch"
+            >
+              <option value="">Tất cả danh mục</option>
+              <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+            </select>
           </div>
 
-          <div class="search-actions">
-            <button @click="handleAdvancedSearch" class="btn-search-advanced">
-              Apply Filters
-            </button>
-            <button @click="clearFilters" class="btn-clear">
-              Clear All
-            </button>
+          <!-- Min Price -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Giá tối thiểu</label>
+            <input
+              v-model.number="filters.minPrice"
+              type="number"
+              placeholder="0đ"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              @input="handleSearch"
+            />
+          </div>
+
+          <!-- Max Price -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Giá tối đa</label>
+            <input
+              v-model.number="filters.maxPrice"
+              type="number"
+              placeholder="1,000,000đ"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              @input="handleSearch"
+            />
           </div>
         </div>
-      </transition>
+
+        <!-- Clear Button -->
+        <div class="flex justify-end mt-4">
+          <button
+            @click="clearFilters"
+            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+          >
+            Xóa bộ lọc
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, watch } from 'vue';
-import type { SearchParams } from '@/services/foodItemService';
+<script setup>
+import { ref, reactive } from 'vue'
 
-interface Props {
-  categories?: string[];
+defineProps({
+  categories: {
+    type: Array,
+    default: () => []
+  }
+})
+
+const emit = defineEmits(['search', 'clear'])
+
+const searchQuery = ref('')
+const sortBy = ref('')
+const showAdvanced = ref(false)
+const filters = reactive({
+  category: '',
+  minPrice: null,
+  maxPrice: null
+})
+
+function toggleAdvanced() {
+  showAdvanced.value = !showAdvanced.value
 }
 
-withDefaults(defineProps<Props>(), {
-  categories: () => [],
-});
-
-const emit = defineEmits<{
-  search: [params: SearchParams];
-  clear: [];
-}>();
-
-const searchQuery = ref('');
-const showAdvanced = ref(false);
-const advancedFilters = ref<SearchParams>({
-  name: '',
-  category: '',
-  theme: '',
-  minPrice: undefined,
-  maxPrice: undefined,
-});
-
-// Debounce timer for basic search
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-
-const toggleAdvanced = () => {
-  showAdvanced.value = !showAdvanced.value;
-};
-
-const handleBasicSearch = () => {
-  // Clear any existing timer
-  if (debounceTimer) {
-    clearTimeout(debounceTimer);
+function handleSearch() {
+  const searchParams = {
+    name: searchQuery.value,
+    sortBy: sortBy.value,
+    ...filters
   }
-
-  // Set a new timer for debounced search
-  debounceTimer = setTimeout(() => {
-    if (searchQuery.value.trim()) {
-      emit('search', { name: searchQuery.value.trim() });
-    } else {
-      emit('clear');
+  
+  // Remove empty values
+  Object.keys(searchParams).forEach(key => {
+    if (!searchParams[key] && searchParams[key] !== 0) {
+      delete searchParams[key]
     }
-  }, 300);
-};
+  })
+  
+  emit('search', searchParams)
+}
 
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    emit('search', { name: searchQuery.value.trim() });
-  } else {
-    emit('clear');
-  }
-};
-
-const handleAdvancedSearch = () => {
-  const params: SearchParams = {
-    name: searchQuery.value.trim() || undefined,
-    category: advancedFilters.value.category || undefined,
-    theme: advancedFilters.value.theme?.trim() || undefined,
-    minPrice: advancedFilters.value.minPrice,
-    maxPrice: advancedFilters.value.maxPrice,
-  };
-
-  // Remove undefined values
-  const cleanParams: SearchParams = {};
-  for (const [key, value] of Object.entries(params)) {
-    if (value !== undefined && value !== '') {
-      const paramKey = key as keyof SearchParams;
-      if (paramKey === 'minPrice' || paramKey === 'maxPrice') {
-        cleanParams[paramKey] = value as number;
-      } else {
-        cleanParams[paramKey] = value as string;
-      }
-    }
-  }
-
-  emit('search', cleanParams);
-};
-
-const clearFilters = () => {
-  searchQuery.value = '';
-  advancedFilters.value = {
-    name: '',
-    category: '',
-    theme: '',
-    minPrice: undefined,
-    maxPrice: undefined,
-  };
-  emit('clear');
-};
-
-// Watch for changes in advanced filters
-watch(
-  () => advancedFilters.value,
-  () => {
-    // Sync the name field with basic search
-    if (advancedFilters.value.name !== searchQuery.value) {
-      advancedFilters.value.name = searchQuery.value;
-    }
-  },
-  { deep: true }
-);
+function clearFilters() {
+  searchQuery.value = ''
+  sortBy.value = ''
+  filters.category = ''
+  filters.minPrice = null
+  filters.maxPrice = null
+  emit('clear')
+}
 </script>
 
 <style scoped>
-.search-bar {
-  width: 100%;
-  margin-bottom: 2rem;
-}
-
-.search-container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-}
-
-.basic-search {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.search-input {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: border-color 0.2s;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #42b983;
-}
-
-.btn-search,
-.btn-toggle {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.btn-search {
-  background: #42b983;
-  color: white;
-}
-
-.btn-search:hover {
-  background: #359268;
-}
-
-.btn-toggle {
-  background: #f5f5f5;
-  color: #2c3e50;
-}
-
-.btn-toggle:hover {
-  background: #e0e0e0;
-}
-
-.advanced-search {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 2px solid #f5f5f5;
-}
-
-.search-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.search-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.search-field label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #666;
-}
-
-.search-field input,
-.search-field select {
-  padding: 0.5rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  transition: border-color 0.2s;
-}
-
-.search-field input:focus,
-.search-field select:focus {
-  outline: none;
-  border-color: #42b983;
-}
-
-.search-actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-}
-
-.btn-search-advanced,
-.btn-clear {
-  padding: 0.5rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.btn-search-advanced {
-  background: #42b983;
-  color: white;
-}
-
-.btn-search-advanced:hover {
-  background: #359268;
-}
-
-.btn-clear {
-  background: #e0e0e0;
-  color: #666;
-}
-
-.btn-clear:hover {
-  background: #d0d0d0;
-}
-
-/* Transition animations */
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.3s ease;
-  max-height: 500px;
-  overflow: hidden;
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  max-height: 0;
-  opacity: 0;
-}
-
-@media (max-width: 768px) {
-  .basic-search {
-    flex-direction: column;
-  }
-
-  .search-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .search-actions {
-    flex-direction: column;
-  }
-
-  .btn-search-advanced,
-  .btn-clear {
-    width: 100%;
-  }
-}
+/* No custom CSS needed */
 </style>

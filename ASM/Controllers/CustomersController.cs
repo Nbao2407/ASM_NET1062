@@ -15,15 +15,18 @@ public class CustomersController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly IPasswordHashService _passwordHashService;
+    private readonly ISanitizationService _sanitizationService;
     private readonly ILogger<CustomersController> _logger;
 
     public CustomersController(
         ApplicationDbContext context,
         IPasswordHashService passwordHashService,
+        ISanitizationService sanitizationService,
         ILogger<CustomersController> logger)
     {
         _context = context;
         _passwordHashService = passwordHashService;
+        _sanitizationService = sanitizationService;
         _logger = logger;
     }
 
@@ -81,6 +84,10 @@ public class CustomersController : ControllerBase
         {
             return NotFound(new { message = "User not found" });
         }
+
+        // Sanitize inputs
+        request.FullName = _sanitizationService.Sanitize(request.FullName);
+        request.Address = _sanitizationService.Sanitize(request.Address);
 
         // Check if email is being changed and if new email already exists
         if (user.Email.ToLower() != request.Email.ToLower())

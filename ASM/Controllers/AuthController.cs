@@ -15,6 +15,7 @@ public class AuthController : ControllerBase
     private readonly IPasswordHashService _passwordHashService;
     private readonly IJwtService _jwtService;
     private readonly IGoogleAuthService _googleAuthService;
+    private readonly ISanitizationService _sanitizationService;
     private readonly ILogger<AuthController> _logger;
 
     public AuthController(
@@ -22,12 +23,14 @@ public class AuthController : ControllerBase
         IPasswordHashService passwordHashService,
         IJwtService jwtService,
         IGoogleAuthService googleAuthService,
+        ISanitizationService sanitizationService,
         ILogger<AuthController> logger)
     {
         _context = context;
         _passwordHashService = passwordHashService;
         _jwtService = jwtService;
         _googleAuthService = googleAuthService;
+        _sanitizationService = sanitizationService;
         _logger = logger;
     }
 
@@ -42,6 +45,10 @@ public class AuthController : ControllerBase
         {
             return BadRequest(ModelState);
         }
+
+        // Sanitize inputs
+        request.FullName = _sanitizationService.Sanitize(request.FullName);
+        request.Address = _sanitizationService.Sanitize(request.Address);
 
         // Check for duplicate email
         var existingUser = await _context.Users
